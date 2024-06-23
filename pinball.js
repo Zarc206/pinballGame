@@ -16,7 +16,7 @@ function begining(){
     let player2DoubleJump = true;
 
     let verticalMovement = 10;
-
+    alert("hi");
 
 
 

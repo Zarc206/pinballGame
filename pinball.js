@@ -73,7 +73,13 @@ function begining(){
     }
     function player1Fall(){
         setTimeout(function(){
-        if (isCollide("stage","player1") == false){
+        let checkCollisions = 0;
+        for (let i = 0; i < stageObjects.length; i++){
+            if (isCollide(stageObjects[i],"player1") == true){
+                checkCollisions += 1;
+            }
+        }
+        if (checkCollisions == 0){
             if (player1VerticalVelocity > 0){
             player1VerticalPosition += verticalMovement;
             } else if (player1VerticalVelocity < 0){

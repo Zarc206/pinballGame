@@ -8,28 +8,102 @@ function begining(){
 
     function addCharacter(clas){
         let square = document.createElement("div");
-        square.style.width = "100px";
-        square.style.height = "100px";
+        square.style.width = "90px";
+        square.style.height = "90px";
+        square.style.border = "5px solid black";
         square.style.background = playerBackground(clas);
         square.innerHTML = clas;
         square.style.textAlign = "center";
         square.style.position = "absolute";
         square.style.top = "100px"
-        square.style.left = String(50 + 100 * classNumber) + "px";
+        square.style.left = String(50 + 95 * classNumber) + "px";
         square.id = "square " + clas;
+
         square.onclick = function(){
             if (currentPlayerSelect == 1){
                 document.getElementById("player1Select").style.background = playerBackground(clas);
                 player1Class = clas;
+
             }
             if (currentPlayerSelect == 2){
                 document.getElementById("player2Select").style.background = playerBackground(clas);
                 player2Class = clas;
             }
         }
-        classNumber += 1;
         characters.push(clas);
         document.body.append(square);
+
+        let info = document.createElement("div");
+        info.style.width = "90px";
+        info.style.height = "90px";
+        info.style.border = "5px solid black"
+        info.style.background = playerBackground(clas);
+        info.innerHTML = "INFO";
+        info.style.textAlign = "center";
+        info.style.position = "absolute";
+        info.style.top = "195px"
+        info.style.left = String(50 + 95 * classNumber) + "px";
+        info.id = "info" + clas;
+
+
+
+        info.onclick = function(){
+            createInfoScreen(clas);
+        }
+        document.body.append(info);
+        
+        classNumber += 1;
+
+
+    }
+    function createInfoScreen(clas){
+        let window = document.createElement("div");
+        window.style.width =   screen.width + "px";
+        window.style.height =  screen.height + "px";
+        window.style.background = "orange";
+        window.style.zIndex = 100;
+        window.style.position = "absolute";
+        window.style.left = "0px";
+        window.style.top = "0px";
+        document.body.append(window);
+
+        let infoWords = document.createElement("div");
+        infoWords.style.width = "490px"
+        infoWords.style.border = "5px solid black";
+        infoWords.style.height = "250px";
+        infoWords.style.background = playerBackground(clas);
+        infoWords.style.zIndex = 101;
+        infoWords.style.position = "absolute";
+        infoWords.style.left = String(screen.width/2 - 250) + "px";
+        infoWords.style.top = "50px";
+        infoWords.style.textAlign = "center";
+        document.body.append(infoWords);
+
+        let xButton = document.createElement("div");
+        xButton.style.width = "50px";
+        xButton.style.height = "50px";
+        xButton.style.position = "absolute";
+        xButton.style.left = "0px";
+        xButton.style.top = "0px";
+        xButton.style.background = "red";
+        xButton.style.zIndex = 101
+        xButton.onclick = function(){
+            window.remove();
+            xButton.remove();
+            infoWords.remove();
+        }
+        document.body.append(xButton);
+
+        if(clas == "shooter"){
+            infoWords.innerHTML = "SHOOTER <br> <br>A long ranged character with a gun. Launch repetative attacks to whittle down your enemy.<br> <br> MAIN: launch a weak projectile with no knockback (2 damage) <br><br> SIDE: charge and fire a slow-moving missile with heavy knockback (8 damage) <br> <br>UP: propell yourself upwards with three quick downwards bursts (2 damage)";
+        }
+        if (clas == "sword"){
+            infoWords.innerHTML = "SWORD <br><br> A short ranged charcter with a deadly sword. Use quick movements and attacks to knock back your enemy.<br><br> MAIN: cut two quick slices in front of you with some knockback (4 damage)<br><br> SIDE: dash to the side slicing everything in your way with some knockback (4 damage) <br><br> UP: take to the sky lauching yourself upwards slashing any enemy infront of you with some knockback (4 damage)";
+        }
+        if (clas == "jester"){
+            infoWords.innerHTML = "JESTER <br><br> Definitely NOT doing any courting. <br><br> MAIN: Juggle three balls and throw them at your enemy doing some knockback (damage and knockback scale <br><br> SIDE: cartwheel to the side dealing damage and some knockback when you colide with an enemy (2 damage) <br><br> UP: disapear in a puff of smoke and explode upwards dealing heavy damage and knockback (15 damage)";
+        }
+
     }
     function playerBackground(clas){
         if (clas == "shooter" ){
@@ -40,6 +114,9 @@ function begining(){
         }
         if (clas == "jester"){
             return("lime");
+        }
+        if (clas == "trapper"){
+            return("yellow")
         }
     }
     function addStartButton(){
@@ -61,6 +138,7 @@ function begining(){
             startButton.remove();
             for (let i = 0; i < characters.length; i++){
                 document.getElementById("square "+ characters[i]).remove();
+                document.getElementById("info" + characters[i]).remove();
             }
         }
         }
@@ -100,6 +178,7 @@ function begining(){
     addCharacter("shooter");
     addCharacter("sword");
     addCharacter("jester");
+    addCharacter("trapper");
 
     addStartButton();
     addPlayerSelect();
@@ -211,6 +290,7 @@ function begining(){
             player1Shield.style.height = "40px";
             player1Shield.id = "player1Shield";
             player1Shield.style.position = "absolute";
+            player1Shield.style.zIndex = 5;
             document.body.append(player1Shield);
 
             let player2Shield = document.createElement("div");
@@ -218,6 +298,7 @@ function begining(){
             player2Shield.style.height = "40px";
             player2Shield.id = "player2Shield";
             player2Shield.style.position = "absolute";
+            player2Shield.style.zIndex = 5;
             document.body.append(player2Shield);
         }
         function createAttacks(){
@@ -334,7 +415,7 @@ function begining(){
         function applyGravity(){
             setTimeout(function(){
                 
-                    if (player2FrozenVertical == false){
+                    if (player1FrozenVertical == false){
                         player1VerticalVelocity += 5;
                     }
                     if (player2FrozenVertical == false){
@@ -676,7 +757,7 @@ function begining(){
         }
         function player2HorizontalMove(){
             setTimeout(function(){
-                if(!(isCollide("player2","stageBottom"))){
+                if((!(isCollide("player2","stageBottom")) && (player2FrozenHorizontal == false))){
                     player2HorizontalPosition += player2MovingRight;
                     player2HorizontalPosition += player2MovingLeft;
                 }
@@ -775,11 +856,17 @@ function begining(){
                         jesterAttackArial(player);                        
                     }
                     if (currentPlayer == "sword"){
-                        swordArialAttack(player);                        
+                        swordAttackArial(player);                        
                     }
                 } else if ((player1Keys.includes("a")) || (player1Keys.includes("d"))){
                     if (currentPlayer == "sword"){
                         swordHorizontalAttack(player);                        
+                    }
+                    if (currentPlayer == "shooter"){
+                        shooterHorizontalAttack(player);                        
+                    }
+                    if (currentPlayer == "jester"){
+                        jesterHorizontalAttack(player);                        
                     }
                 } else {
                 if (currentPlayer == "shooter"){
@@ -803,11 +890,17 @@ function begining(){
                         jesterAttackArial(player);                        
                     }
                     if (currentPlayer == "sword"){
-                        swordArialAttack(player);                        
+                        swordAttackArial(player);                        
                     }
                 } else if ((player2Keys.includes("ArrowLeft")) || (player2Keys.includes("ArrowRight"))){
                     if (currentPlayer == "sword"){
                         swordHorizontalAttack(player);                        
+                    }
+                    if (currentPlayer == "shooter"){
+                        shooterHorizontalAttack(player);                        
+                    }
+                    if (currentPlayer == "jester"){
+                        jesterHorizontalAttack(player);                        
                     }
                 } else {
                 if (currentPlayer == "shooter"){
@@ -999,6 +1092,96 @@ function begining(){
             }
             generateShot(0);
         }
+        function shooterHorizontalAttack(player){
+            let attackDamage = 8;
+            let attackStun = 50;
+            let direction;
+            let enemy;
+            playerWait(player,500);
+            playerAttackCooldown(player, 750);
+
+            if (player == 1){
+                document.getElementById("player1").style.background = "orange";
+                player1FrozenHorizontal = true;
+                player1FrozenVertical = true;
+                direction = player1Direction;
+            }
+            if (player == 2){
+                document.getElementById("player2").style.background = "orange";
+                player2FrozenHorizontal = true;
+                player2FrozenVertical = true;
+                direction = player2Direction;
+            }
+            setTimeout(function(){
+                if (player == 1){
+                    document.getElementById("player1").style.background = playerBackground(player1Class);
+                    player1FrozenHorizontal = false;
+                    player1FrozenVertical = false;
+                }
+                if (player == 2){
+                    document.getElementById("player2").style.background = playerBackground(player2Class);
+                    player2FrozenHorizontal = false;
+                    player2FrozenVertical = false;
+                }
+                function createMissile(){
+                
+                    let missile = document.createElement("div");
+                    missile.style.width = "50px";
+                    missile.style.height = "50px"
+                    missile.style.position = "absolute";
+                    missile.style.background = "orange";
+                    missile.style.borderRadius = "50%";
+
+                    function missileMove(position){
+                        missile.style.left = String(position) + "px";
+                        setTimeout(function(){
+                            if(isNoIdColide(missile,enemy)){
+                                missile.remove()
+                                applyDamage(attackDamage,enemy);
+                                applyForce(attackDamage,enemy,direction);
+                                playerWait(enemy,attackStun)
+                            } else {
+                                if (direction == "left"){
+                                    if ((position - 30 ) > 0){
+                                        missileMove(position - 30);
+                                    } else {
+                                        missile.remove();
+                                    }
+                                }
+                                if (direction == "right"){
+                                    if ((position + 30) < screen.width){
+                                        missileMove(position + 30);
+                                    } else {
+                                        missile.remove();
+                                    }
+                                }
+                            }
+                        },50)
+                    }
+                    if (player == 1){
+                        missile.style.left = String(player1HorizontalPosition) + "px";
+                        missile.style.top = String(player1VerticalPosition) + "px";
+                        enemy = "player2";
+                        missileMove(player1HorizontalPosition);
+                    }
+                    if (player == 2){
+                        missile.style.left = String(player2HorizontalPosition) + "px";
+                        missile.style.top = String(player2VerticalPosition) + "px";
+                        enemy = "player1";
+                        missileMove(player2HorizontalPosition);
+                    }
+                    document.body.append(missile);
+
+
+                   
+                    missileMove();
+                }
+                createMissile();
+
+            },500)
+
+
+        }
 
         function swordAttack(player){
             let attackDamage = 4;
@@ -1007,9 +1190,9 @@ function begining(){
             playerAttackCooldown(player, 750);
 
             if (player == 1){
-                let slash = document.getElementById("player1Attack");
-                slash.style.height = "10px";
-                slash.style.width = "50px";
+                let slice = document.getElementById("player1Attack");
+                slice.style.height = "10px";
+                slice.style.width = "50px";
 
                 enemy = "player2";
                 if (player1Direction == "right"){
@@ -1020,13 +1203,14 @@ function begining(){
                     player1HorizontalAttack = -50;
                     player1VerticalAttack = 0;
                 }
-                slash.style.left = String(player1HorizontalPosition + player1HorizontalAttack) + "px";
-                slash.style.top = String(player1VerticalPosition + player1VerticalAttack) + "px";
+                slice.style.left = String(player1HorizontalPosition + player1HorizontalAttack) + "px";
+                slice.style.top = String(player1VerticalPosition + player1VerticalAttack) + "px";
                 
-                slash.style.background = "orange";
+                slice.style.background = "orange";
 
                 setTimeout(function(){
-                if (isNoIdColide(slash,enemy) == true){
+                enemy = "player2";
+                if (isNoIdColide(slice,enemy) == true){
                     applyDamage(attackDamage,"player2")
                     playerWait(2,attackStun);
                     applyForce(attackDamage,"player2",player1Direction);
@@ -1034,14 +1218,15 @@ function begining(){
                 }
                 },50)
                 setTimeout(function(){
-                    slash.style.background = "none";
+                    slice.style.background = "none";
                 },200)
                 setTimeout(function(){
                     player1VerticalAttack = 30;
-                    slash.style.left = String(player1HorizontalPosition + player1HorizontalAttack) + "px";
-                    slash.style.top = String(player1VerticalPosition + player1VerticalAttack) + "px";
-                    slash.style.background = "orange";
-                    if (isNoIdColide(slash,enemy) == true){
+                    slice.style.left = String(player1HorizontalPosition + player1HorizontalAttack) + "px";
+                    slice.style.top = String(player1VerticalPosition + player1VerticalAttack) + "px";
+                    slice.style.background = "orange";
+                    enemy = "player2";
+                    if (isNoIdColide(slice,enemy) == true){
                         applyDamage(attackDamage,"player2");
                         applyForce(attackDamage,"player2",player1Direction);
                         playerWait(2,attackStun);
@@ -1049,15 +1234,15 @@ function begining(){
                     }
                 },300)
                 setTimeout(function(){
-                    slash.style.background = "none";
+                    slice.style.background = "none";
                 },400)
             }
 
             if (player == 2){
 
-                let slash = document.getElementById("player2Attack");
-                slash.style.height = "10px";
-                slash.style.width = "50px";
+                let slice = document.getElementById("player2Attack");
+                slice.style.height = "10px";
+                slice.style.width = "50px";
 
                 enemy = "player1";
                 if (player2Direction == "right"){
@@ -1068,13 +1253,14 @@ function begining(){
                     player2HorizontalAttack = -50;
                     player2VerticalAttack = 0;
                 }
-                slash.style.left = String(player2HorizontalPosition + player2HorizontalAttack) + "px";
-                slash.style.top = String(player2VerticalPosition + player2VerticalAttack) + "px";
+                slice.style.left = String(player2HorizontalPosition + player2HorizontalAttack) + "px";
+                slice.style.top = String(player2VerticalPosition + player2VerticalAttack) + "px";
                 
-                slash.style.background = "orange";
+                slice.style.background = "orange";
 
                 setTimeout(function(){
-                if (isNoIdColide(slash,enemy) == true){
+                    enemy = "player1";
+                if (isNoIdColide(slice,enemy) == true){
                     applyDamage(attackDamage,"player1");
                     playerWait(1,attackStun);
                     applyForce(attackDamage,"player1",player2Direction)
@@ -1082,14 +1268,15 @@ function begining(){
                 }
                 },50)
                 setTimeout(function(){
-                    slash.style.background = "none";
+                    slice.style.background = "none";
                 },200)
                 setTimeout(function(){
                     player2VerticalAttack = 30;
-                    slash.style.left = String(player2HorizontalPosition + player2HorizontalAttack) + "px";
-                    slash.style.top = String(player2VerticalPosition + player2VerticalAttack) + "px";
-                    slash.style.background = "orange";
-                    if (isNoIdColide(slash,enemy) == true){
+                    slice.style.left = String(player2HorizontalPosition + player2HorizontalAttack) + "px";
+                    slice.style.top = String(player2VerticalPosition + player2VerticalAttack) + "px";
+                    slice.style.background = "orange";
+                    enemy = "player1";
+                    if (isNoIdColide(slice,enemy) == true){
                         applyDamage(attackDamage,"player1");
                         playerWait(1,attackStun);
                         applyForce(attackDamage,"player1",player2Direction)
@@ -1097,11 +1284,11 @@ function begining(){
                     }
                 },300)
                 setTimeout(function(){
-                    slash.style.background = "none";
+                    slice.style.background = "none";
                 },400)
             }
         }
-        function swordArialAttack(player){
+        function swordAttackArial(player){
             let attackDamage = 4;
             let attackStun = 50;
             let slash;
@@ -1117,7 +1304,6 @@ function begining(){
                 if(player1Direction == "left"){
                     player1HorizontalAttack = -50;
                 }
-                enemy = "player2";
                 player1ArialAttack = false;
             }
             if (player == 2){
@@ -1129,7 +1315,6 @@ function begining(){
                 if(player2Direction == "left"){
                     player2HorizontalAttack = -50;
                 }
-                enemy = "player1"
                 player2ArialAttack = false;
             }
             slash.style.height = "10px";
@@ -1140,18 +1325,22 @@ function begining(){
                     slash.style.background = "orange";
                     if(number > 0){
                         if(player == 1){
+                            enemy = "player2"
+                            slash = document.getElementById("player1Attack");
                             player1VerticalPosition -= 15;
                             player1VerticalVelocity = -15;
-                            if (isNoIdColide(slash,enemy)){
+                            if (isNoIdColide(document.getElementById("player1Attack"),enemy)){
                                 applyDamage(attackDamage,enemy);
                                 applyForce(attackDamage,enemy, player1Direction);
                                 playerWait(2,attackStun);
                             }
                         }
                         if(player == 2){
+                            enemy = "player1";
+                            slash = document.getElementById("player2Attack");
                             player2VerticalPosition -= 15;
                             player2VerticalVelocity = -15;
-                            if (isNoIdColide(slash,enemy)){
+                            if (isNoIdColide(document.getElementById("player2Attack"),enemy)){
                                 applyDamage(attackDamage,enemy);
                                 applyForce(attackDamage,enemy,player2Direction);
                                 playerWait(1,attackStun);
@@ -1180,6 +1369,7 @@ function begining(){
                 slash = document.getElementById("player1Attack");
                 document.getElementById("player1").style.background = "orange";
                 player1FrozenHorizontal = true;
+                player1FrozenVertical = true;
                 direction = player1Direction;
                 if (direction == "left"){
                     player1HorizontalAttack = 50;
@@ -1197,6 +1387,8 @@ function begining(){
                     slash.style.background = "orange"
                 
                     player1FrozenHorizontal = false;
+                    player1FrozenVertical = false;
+
                     setTimeout(function(){
                         if(isNoIdColide(slash,enemy)){
                             applyDamage(attackDamage,enemy)
@@ -1215,6 +1407,7 @@ function begining(){
                 slash = document.getElementById("player2Attack");
                 document.getElementById("player2").style.background = "orange";
                 player2FrozenHorizontal = true;
+                player2FrozenVertical = true;
                 direction = player2Direction;
                 if (direction == "left"){
                     player2HorizontalAttack = 50;
@@ -1241,6 +1434,7 @@ function begining(){
                         document.getElementById("player2").style.background = playerBackground(character2);
                         slash.style.background = "none"
                         player2FrozenHorizontal = false;
+                        player2FrozenVertical = false;
                         player1HorizontalAttack = 0;
 
                     },50)
@@ -1560,6 +1754,81 @@ function begining(){
                 }
                 boom.style.background = "none";
             },600)
+        }
+        function jesterHorizontalAttack(player){
+            let attackDamage = 2;
+            let attackStun = 50;
+            let enemy;
+            let cartwheel;
+            let direction;
+            playerAttackCooldown(player,1200);
+            playerWait(player,800);
+
+            if (player == 1){
+                player1FrozenHorizontal = true;
+                player1FrozenVertical = true;
+                document.getElementById("player1").style.background = "orange";
+                direction = player1Direction;
+                cartwheel = document.getElementById("player1Attack");
+                player1HorizontalAttack = -25;
+                player1VerticalAttack = -25;
+                enemy = "player2";
+            }
+            if (player == 2){
+                player2FrozenHorizontal = true;
+                player2FrozenVertical = true;
+                document.getElementById("player2").style.background = "orange";
+                direction = player2Direction;
+                cartwheel = document.getElementById("player2Attack");
+                player2HorizontalAttack = -25;
+                player2VerticalAttack = -25;
+                enemy = "player1";
+            }
+            cartwheel.style.width = "100px";
+            cartwheel.style.height = "100px";
+            cartwheel.style.background = "orange";
+            function doACartwheel(number){
+                if (number > 0){
+                setTimeout(function(){
+                if (direction == "left"){
+                    if (player == 1){
+                        player1HorizontalPosition -= 75;
+                    }
+                    if (player == 2){
+                        player2HorizontalPosition -= 75;
+                    }
+                }
+                if (direction == "right"){
+                    if (player == 1){
+                        player1HorizontalPosition += 75;
+                    }
+                    if (player == 2){
+                        player2HorizontalPosition += 75;
+                    }
+                }
+                if (isNoIdColide(cartwheel,enemy)){
+                    applyDamage(attackDamage,enemy);
+                    applyForce(attackDamage,enemy,direction);
+                    playerWait(enemy,attackStun);
+                }
+                doACartwheel(number - 1);
+                },200)
+                } else {
+                    cartwheel.style.background = "none";
+                    if (player == 1){
+                        player1FrozenHorizontal = false;
+                        player1FrozenVertical = false;
+                        document.getElementById("player1").style.background = playerBackground(player1Class);
+                    }
+                    if (player == 2){
+                        player2FrozenHorizontal = false;
+                        player2FrozenVertical = false;
+                        document.getElementById("player2").style.background = playerBackground(player1Class);
+                    }
+                }
+            }
+
+            doACartwheel(4);
         }
 
         function basicAttack(player){
